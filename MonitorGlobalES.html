@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <title>Monitor Global de Basura Digital</title>
+    <style>
+        :root {
+            --primary: #3498db;  /* Azul principal */
+            --secondary: #2980b9; /* Azul más oscuro */
+            --dark: #2c3e50;     /* Azul muy oscuro para fondo */
+            --darker: #1a252f;   /* Azul casi negro para contenedores */
+            --light: #ffffff;    /* Blanco puro */
+            --light-gray: #f5f5f5; /* Blanco grisáceo */
+            --gray: #95a5a6;     /* Gris para textos secundarios */
+        }
+        body {
+            font-family: Roboto;
+            background-color: var(--dark);
+            color: var(--light);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--primary);
+            padding-bottom: 20px;
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: var(--gray);
+            font-weight: normal;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .counter {
+            background-color: var(--darker);
+            border-radius: 10px;
+            padding: 25px 20px;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.2);
+            transition: transform 0.3s;
+        }
+        
+        .counter:hover {
+            transform: translateY(-5px);
+        }
+        
+        .counter-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--gray);
+        }
+        
+        .number {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .unit {
+            font-size: 1.2rem;
+            color: var(--gray);
+        }
+        
+        .info {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 10px;
+        }
+        
+        .last-updated {
+            text-align: center;
+            margin: 30px 0;
+            font-style: italic;
+            color: var(--gray);
+        }
+        
+        .sources {
+            background-color: var(--darker);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        
+        .sources details {
+            cursor: pointer;
+        }
+        
+        .sources summary {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.3rem;
+            outline: none;
+            transition: color 0.3s;
+        }
+        
+        .sources summary:hover {
+            color: var(--light);
+        }
+        
+        .sources ul {
+            padding-left: 20px;
+            list-style-type: none;
+            margin-top: 15px;
+        }
+        
+        .sources li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .sources li:before {
+            content: "•";
+            color: var(--primary);
+            font-size: 1.5em;
+            position: absolute;
+            left: 0;
+            top: -3px;
+        }
+        
+        .sources a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .sources a:hover {
+            color: var(--light);
+            text-decoration: underline;
+        }
+        
+        .methodology {
+            margin-top: 30px;
+            background-color: var(--darker);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .methodology summary {
+            cursor: pointer;
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 10px;
+            outline: none;
+            transition: color 0.3s;
+        }
+        
+        .methodology summary:hover {
+            color: var(--light);
+        }
+        
+        .methodology p {
+            margin: 8px 0;
+            color: var(--light-gray);
+        }
+        
+        footer {
+            background-color: var(--darker);
+            color: var(--light-gray);
+            text-align: center;
+            padding: 15px;
+            margin-top: 40px;
+            border-radius: 10px;
+            border-top: 2px solid var(--primary);
+        }
+        
+        @media (max-width: 600px) {
+            .number {
+                font-size: 2.2rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Monitor Global de Basura Digital</h1>
+            <p class="subtitle">Impacto ambiental en tiempo real</p>
+        </header>
+        
+        <div class="dashboard">
+            <div class="counter">
+                <div class="counter-title">Dispositivos Electrónicos Desechados Hoy</div>
+                <div class="number" id="e-waste">0</div>
+                <div class="info">Esto equivale a aproximadamente 300 dispositivos por segundo.</div>
+            </div>
+            
+            <div class="counter">
+                <div class="counter-title">Datos Digitales Inútiles Generados Solo Hoy</div>
+                <div class="number" id="data-waste">0</div>
+                <div class="unit">TB</div>
+                <div class="info">Aproximadamente 1000 TB (1 PB) generados por segundo.</div>
+            </div>
+            
+            <div class="counter">
+                <div class="counter-title">Emisiones de CO₂ de la Basura Digital</div>
+                <div class="number" id="co2">0</div>
+                <div class="unit">toneladas</div>
+                <div class="info">Aproximadamente 40 toneladas emitidas por segundo.</div>
+            </div>
+        </div>
+        
+        <div class="last-updated">
+            Última actualización: <span id="update-time"></span> | 
+            Contadores se reinician diariamente a las 00:00
+        </div>
+        
+        <div class="methodology">
+            <details>
+                <summary>¿Cómo calculamos estos números?</summary>
+                <p><strong>Basura electrónica:</strong> Basado en el Global E-Waste Monitor 2020, que estima 53.6 millones de toneladas de residuos electrónicos anuales. Consideramos 5kg por dispositivo (promedio entre celulares y computadoras), totalizando 10 mil millones de dispositivos/año (300 por segundo).</p>
+                
+                <p><strong>Datos inútiles:</strong> Informe de IDC indica que 60-90% de los datos almacenados nunca son accedidos. Usamos la estimación conservadora de 60% de 64 ZB generados anualmente, resultando en 40 ZB de datos inútiles/año (1000 TB/segundo).</p>
+                
+                <p><strong>Emisiones de CO₂:</strong> The Shift Project estima que el sector digital representa el 3.7% de las emisiones globales, cerca de 1.4 mil millones de toneladas anuales (40 toneladas/segundo).</p>
+            </details>
+        </div>
+        
+        <div class="sources">
+            <details>
+                <summary>Fuentes Confiables</summary>
+                <ul>
+                    <li><a href="https://globalewaste.org/" target="_blank">Global E-Waste Monitor</a> - Datos sobre residuos electrónicos</li>
+                    <li><a href="https://www.idc.com/" target="_blank">International Data Corporation (IDC)</a> - Estadísticas de datos digitales</li>
+                    <li><a href="https://theshiftproject.org/" target="_blank">The Shift Project</a> - Impacto ambiental de la tecnología</li>
+                    <li><a href="https://www.itu.int/" target="_blank">Unión Internacional de Telecomunicaciones</a> - Datos globales de TI</li>
+                </ul>
+            </details>
+        </div>
+        
+        <footer>
+            <p>Monitor Global de Basura Digital © 2025 | Todos los derechos reservados</p>
+            <p>Una iniciativa para concientizar sobre el impacto ambiental de la basura digital.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tasas actualizadas basadas en fuentes confiables (valores por segundo)
+        const RATES = {
+            eWaste: 300,     // 10 mil millones dispositivos/año (Global E-Waste Monitor)
+            dataWaste: 1000,  // 40 ZB de datos inútiles/año (IDC)
+            co2: 40           // 1.4 mil millones ton CO₂/año (The Shift Project)
+        };
+
+        // Formatea números grandes
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + ' M';
+            }
+            if (num >= 1000) {
+                return (num / 1000).toFixed(1) + ' mil';
+            }
+            return Math.floor(num);
+        }
+
+        // Verifica si es un nuevo día
+        function isNewDay(lastUpdate) {
+            const now = new Date();
+            const last = new Date(lastUpdate);
+            return now.getDate() !== last.getDate() || 
+                   now.getMonth() !== last.getMonth() || 
+                   now.getFullYear() !== last.getFullYear();
+        }
+
+        // Carga o inicializa datos
+        function loadData() {
+            const saved = localStorage.getItem('digitalWasteStats');
+            const now = Date.now();
+            
+            if (saved) {
+                const data = JSON.parse(saved);
+                if (isNewDay(data.lastUpdate)) {
+                    // Nuevo día - reinicia contadores
+                    return {
+                        lastUpdate: now,
+                        counts: { eWaste: 0, dataWaste: 0, co2: 0 }
+                    };
+                }
+                return data;
+            }
+            
+            // Primer acceso
+            return {
+                lastUpdate: now,
+                counts: { eWaste: 0, dataWaste: 0, co2: 0 }
+            };
+        }
+
+        // Guarda datos
+        function saveData(data) {
+            localStorage.setItem('digitalWasteStats', JSON.stringify(data));
+        }
+
+        // Actualiza los contadores
+        function updateCounters() {
+            const data = loadData();
+            const now = Date.now();
+            const secondsElapsed = (now - data.lastUpdate) / 1000;
+            
+            // Actualiza conteos
+            data.counts.eWaste += RATES.eWaste * secondsElapsed;
+            data.counts.dataWaste += RATES.dataWaste * secondsElapsed;
+            data.counts.co2 += RATES.co2 * secondsElapsed;
+            data.lastUpdate = now;
+            
+            saveData(data);
+            
+            // Muestra los valores formateados
+            document.getElementById('e-waste').textContent = formatNumber(data.counts.eWaste);
+            document.getElementById('data-waste').textContent = formatNumber(data.counts.dataWaste);
+            document.getElementById('co2').textContent = formatNumber(data.counts.co2);
+            
+            // Formatea fecha y hora
+            const options = { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit',
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            };
+            document.getElementById('update-time').textContent = 
+                new Date(now).toLocaleTimeString('es-ES', options);
+        }
+
+        // Programa el reinicio diario
+        function scheduleDailyReset() {
+            const now = new Date();
+            const midnight = new Date();
+            midnight.setHours(24, 0, 0, 0);
+            
+            setTimeout(() => {
+                updateCounters(); // Fuerza la verificación de nuevo día
+                scheduleDailyReset(); // Reprograma para el próximo día
+            }, midnight - now);
+        }
+
+        // Inicializa el sistema
+        function init() {
+            updateCounters();
+            setInterval(updateCounters, 1000);
+            window.addEventListener('focus', updateCounters);
+            scheduleDailyReset();
+        }
+
+        init();
+    </script>
+</body>
+</html>

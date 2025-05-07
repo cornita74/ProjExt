@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <title>Quiz - Dia Mundial da Limpeza Digital</title>
+    <style>
+        :root {
+            --primary: #3498db;  /* Azul principal */
+            --secondary: #2980b9; /* Azul mais escuro */
+            --dark: #2c3e50;     /* Azul muito escuro para fundo */
+            --darker: #1a252f;   /* Azul quase preto para containers */
+            --light: #ffffff;    /* Branco puro */
+            --light-gray: #f5f5f5; /* Branco acinzentado */
+            --gray: #95a5a6;     /* Cinza para textos secundários */
+            --container-bg: #1a3a5a; /* Nova cor azul escura para o container */
+            --success: #28a745;  /* Verde para respostas corretas */
+            --error: #dc3545;    /* Vermelho para respostas incorretas */
+        }
+
+        /* Estilo geral da página */
+        body {
+            font-family: Roboto;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--light-gray);
+            background-image: url('../ProjExt/img/TonsAzul.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            color: var(--dark);
+            min-height: 100vh;
+            box-sizing: border-box;
+            position: relative;
+            padding-bottom: 120px; /* Espaço para o footer */
+        }
+
+        /* Estilo do título principal */
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        /*Container principal do quiz*/
+        .quiz-container {
+            background-color: var(--container-bg);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border: 2px solid var(--light);
+            margin-bottom: 20px;
+        }
+
+        /*Estilo das perguntas*/
+        .pergunta {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--light);
+        }
+
+        /*Estilo das alternativas*/
+        .alternativas {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            color: var(--light);
+        }
+
+        /* Estilo de cada alternativa sozinha */
+        .alternativa {
+            padding: 10px 12px;
+            background-color: var(--secondary);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid var(--light);
+            font-size: 0.95em;
+        }
+
+        /* Efeito ao passar o mouse sobre uma alternativa */
+        .alternativa:hover {
+            background-color: var(--secondary);
+            border-color: var(--primary);
+        }
+
+        /* Estilo para alternativas corretas e incorretas */
+        .alternativa.correta {
+            background-color: var(--success);
+            color: var(--light);
+            border-color: #218838;
+        }
+
+        .alternativa.incorreta {
+            background-color: var(--error);
+            color: var(--light);
+            border-color: #c82333;
+        }
+
+        /* Barra de progresso do quiz */
+        .progresso {
+            height: 8px;
+            background-color: var(--light-gray);
+            border-radius: 5px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            border: 2px solid var(--darker);
+        }
+
+        .barra-progresso {
+            height: 100%;
+            background-color: var(--secondary);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* Estilo da seção de resultado */
+        .resultado {
+            text-align: center;
+            padding: 15px;
+            display: none;
+            background-color: var(--container-bg);
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 15px;
+            border: 2px solid var(--light);
+            color: var(--light);
+            margin-bottom: 20px;
+        }
+
+        .pontuacao {
+            font-size: 1.3em;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        /* Botões finais (reiniciar e jogar novamente) */
+        .botoes-finais {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .botao-reiniciar {
+            background-color: var(--secondary);
+            color: var(--light);
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border: 1px solid var(--light);
+        }
+
+        .botao-reiniciar:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        .explicacao {
+            margin-top: 12px;
+            padding: 8px;
+            background-color: var(--secondary);
+            border-radius: 5px;
+            font-style: italic;
+            color: var(--light);
+            border: 1px solid var(--light);
+            font-size: 0.9em;
+        }
+
+        /* Botão de dica */
+        .dica-botao {
+            background-color: var(--secondary);
+            color: var(--light);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin-top: 12px;
+            transition: background-color 0.3s ease;
+            border: 1px solid var(--light);
+        }
+
+        .dica-botao:hover {
+            background-color: var(--primary);
+        }
+
+        .dica-botao:disabled {
+            background-color: var(--dark);
+            cursor: not-allowed;
+        }
+
+        .dica-marcador {
+            position: absolute;
+            right: 10px;
+            color: var(--light);
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+
+        /* Contador de dicas */
+        .contador-dicas {
+            font-size: 0.8em;
+            color: var(--gray);
+            margin-top: 5px;
+            text-align: left;
+        }
+
+        .negacao {
+            color: var(--error);
+            font-weight: bold;
+        }
+        
+        .botao-MonitorGlobal {
+            background-color: var(--secondary);
+            color: var(--light);
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            display: inline-block;
+            border: 1px solid var(--light);
+        }
+
+        .botao-MonitorGlobal:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        /* Estilo do footer - VERSÃO ORIGINAL */
+        footer {
+            background: var(--container-bg);
+            padding: 15px;
+            text-align: center;
+            font-size: 15px;
+            border-radius: 10px;
+            border: 2px solid var(--light);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 800px;
+            margin: 0 auto;
+            margin-bottom: 20px;
+            color: var(--light);
+        }
+
+        /* Estilo do botão para o LimpaBrasil */
+        .botao-limpabrasil {
+            background-color: var(--secondary);
+            color: var(--light);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-decoration: none;
+            display: inline-block;
+            border: 1px solid var(--light);
+            margin-top: 8px;
+        }
+
+        .botao-limpabrasil:hover {
+            background-color: var(--secondary);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Media Queries para Responsividade */
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 15px;
+            }
+            
+            .quiz-container, .resultado {
+                padding: 12px;
+            }
+            
+            .pergunta {
+                font-size: 1em;
+                margin-bottom: 12px;
+            }
+            
+            .alternativa {
+                padding: 8px 10px;
+                font-size: 0.9em;
+            }
+            
+            .pontuacao {
+                font-size: 1.2em;
+            }
+            
+            .botao-reiniciar, .botao-MonitorGlobal, .botao-limpabrasil {
+                padding: 8px 15px;
+                font-size: 0.85em;
+            }
+            
+            footer {
+                font-size: 14px;
+                padding: 12px;
+            }
+            
+            .dica-botao {
+                padding: 6px 10px;
+                font-size: 0.8em;
+            }
+            
+            .explicacao {
+                font-size: 0.85em;
+            }
+        }
+
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 1.3em;
+            }
+            
+            .quiz-container, .resultado {
+                padding: 10px;
+            }
+            
+            .pergunta {
+                font-size: 0.95em;
+            }
+            
+            .alternativa {
+                padding: 7px 8px;
+                font-size: 0.85em;
+            }
+            
+            .botoes-finais {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .botao-reiniciar, .botao-MonitorGlobal {
+                width: 100%;
+            }
+            
+            footer {
+                font-size: 13px;
+                padding: 10px;
+            }
+            
+            .dica-marcador {
+                position: static;
+                display: block;
+                margin-top: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Título do quiz -->
+    <h1>Quiz - Dia Mundial da Limpeza Digital</h1>
+    <!-- Container principal do quiz -->
+    <div class="quiz-container">
+        <!-- Barra de progresso -->
+        <div class="progresso">
+            <div class="barra-progresso" id="barra-progresso"></div>
+        </div>
+        <div id="area-pergunta"></div>
+    </div>
+    <footer>
+        <p> Quiz Limpeza Digital © 2025 / Todos os direitos reservados </p>
+        <a href="https://limpabrasil.org/quem-somos/" 
+           target="_blank"
+           class="botao-limpabrasil">
+            Visite o site oficial do LimpaBrasil
+        </a>
+    </footer>
+    <!-- Seção de resultado -->
+    <div class="resultado" id="resultado">
+        <div class="pontuacao" id="pontuacao"></div>
+        <p id="mensagem-final"></p>
+        <div class="botoes-finais">
+            <button class="botao-reiniciar" onclick="reiniciarQuiz()">Fazer quiz novamente</button>
+            <a href="MonitorGlobalBR.html" class="botao-MonitorGlobal" id="botao-MonitorGlobal">Ver dados ao vivo</a>
+        </div>
+    </div>
+    <!-- Script principal do quiz -->
+    <script>
+        // Banco de questões completo (50 perguntas)
+        const questions = [
+            {
+                pergunta: "Quando é comemorado o Dia Mundial da Limpeza Digital?",
+                alternativas: ["18 de março", "25 de Dezembro", "20 de Abril", "12 de junho", "1 de Maio"],
+                correta: 0,
+                explicacao: "O Dia Mundial da Limpeza Digital é comemorado em 18 de março."
+            },
+            {
+                pergunta: "Qual é o principal objetivo do Dia da Limpeza Digital?",
+                alternativas: ["Comprar novos dispositivos", "Conscientizar sobre o lixo digital e promover organização", "Aumentar o uso de redes sociais", "Criar mais contas online", "Vender produtos eletrônicos"],
+                correta: 1,
+                explicacao: "O principal objetivo é conscientizar sobre o lixo digital e promover organização."
+            },
+            {
+                pergunta: "O que é lixo digital?",
+                alternativas: ["Dispositivos eletrônicos quebrados", "Aplicativos não atualizados", "Arquivos, e-mails e dados inúteis armazenados", "Conexões de internet lentas", "Baterias descarregadas"],
+                correta: 2,
+                explicacao: "Lixo digital são arquivos, e-mails e dados inúteis armazenados em nossos dispositivos."
+            },
+            {
+                pergunta: "Qual destes é um exemplo de lixo digital?",
+                alternativas: ["Livros físicos", "Garrafas plásticas", "Roupas usadas", "E-mails antigos não lidos", "Móveis velhos"],
+                correta: 3,
+                explicacao: "E-mails antigos não lidos são um exemplo clássico de lixo digital."
+            },
+            {
+                pergunta: "Por que limpar o cache do navegador é importante?",
+                alternativas: ["Aumenta a velocidade do processador", "Aumenta o número de anúncios", "Desativa a internet", "Exclui todos os seus arquivos", "Melhora o desempenho e libera espaço"],
+                correta: 4,
+                explicacao: "Limpar o cache melhora o desempenho do navegador e libera espaço."
+            },
+            {
+                pergunta: "O que são 'cookies' de navegação?",
+                alternativas: ["Biscoitos virtuais", "Pequenos arquivos que armazenam dados de sites", "Vírus de computador", "Aplicativos de mensagens", "Extensões do navegador"],
+                correta: 1,
+                explicacao: "Cookies são pequenos arquivos que armazenam dados de sites."
+            },
+            {
+                pergunta: "Qual ação ajuda a reduzir o lixo digital?",
+                alternativas: ["Excluir fotos e vídeos duplicados", "Comprar um celular novo", "Ignorar notificações", "Usar apenas papel", "Desligar o computador"],
+                correta: 0,
+                explicacao: "Excluir fotos e vídeos duplicados ajuda a reduzir o lixo digital."
+            },
+            {
+                pergunta: "O que é 'digital hoarding'?",
+                alternativas: ["Compartilhar memes", "Vender dispositivos usados", "Acumular dados digitais sem necessidade", "Bloquear redes sociais", "Formatar o computador"],
+                correta: 2,
+                explicacao: "Digital hoarding é o hábito de acumular dados digitais sem necessidade."
+            },
+            {
+                pergunta: "Qual serviço NÃO é de armazenamento em nuvem?",
+                alternativas: ["Google Drive", "Dropbox", "iCloud", "Microsoft Word", "OneDrive"],
+                correta: 3,
+                explicacao: "Microsoft Word é um processador de texto, não um serviço de nuvem."
+            },
+            {
+                pergunta: "Qual é a vantagem de desativar notificações de apps não usados?",
+                alternativas: ["Melhora a qualidade da câmera", "Aumenta o armazenamento", "Bloqueia a internet", "Exclui os apps automaticamente", "Reduz distrações e economiza bateria"],
+                correta: 4,
+                explicacao: "Desativar notificações reduz distrações e economiza bateria."
+            },
+            {
+                pergunta: "O que a 'lixeira' do computador faz?",
+                alternativas: ["Armazena arquivos excluídos temporariamente", "Acelera a internet", "Remove vírus automaticamente", "Desfragmenta o disco rígido", "Compacta arquivos grandes"],
+                correta: 0,
+                explicacao: "A lixeira armazena arquivos excluídos temporariamente."
+            },
+            {
+                pergunta: "Qual destes NÃO é um tipo de lixo digital?",
+                alternativas: ["Spam", "Árvores plantadas", "Arquivos corrompidos", "Apps não utilizados", "E-mails não lidos"],
+                correta: 1,
+                explicacao: "Árvores plantadas não são um tipo de lixo digital."
+            },
+            {
+                pergunta: "O que significa 'spam' no e-mail?",
+                alternativas: ["Arquivos importantes", "Um tipo de vírus", "Mensagens indesejadas ou não solicitadas", "Notificações do governo", "Promoções de lojas"],
+                correta: 2,
+                explicacao: "Spam refere-se a mensagens indesejadas ou não solicitadas."
+            },
+            {
+                pergunta: "Qual ferramenta do Google ajuda a limpar fotos duplicadas?",
+                alternativas: ["Google Maps", "Google Agenda", "Google Tradutor", "Google Fotos (opção 'Liberar espaço')", "Google Keep"],
+                correta: 3,
+                explicacao: "Google Fotos tem a opção 'Liberar espaço' para limpar duplicatas."
+            },
+            {
+                pergunta: "Por que é importante fazer backup dos dados?",
+                alternativas: ["Para instalar novos programas", "Para aumentar a velocidade da internet", "Para excluir arquivos mais rápido", "Para reduzir o uso de energia", "Para evitar perda de informações importantes"],
+                correta: 4,
+                explicacao: "Fazer backup evita perda de informações importantes."
+            },
+            {
+                pergunta: "O que é um 'phishing scam'?",
+                alternativas: ["Tentativa de roubo de dados pessoais online", "Um tipo de pescaria", "Um aplicativo de edição de fotos", "Um vírus inofensivo", "Um serviço de e-mail"],
+                correta: 0,
+                explicacao: "Phishing scam é uma tentativa de roubo de dados pessoais online."
+            },
+            {
+                pergunta: "Qual destes é um exemplo de senha segura?",
+                alternativas: ["123456", "S3nh@F0rt3!2024", "password", "seu nome", "data de nascimento"],
+                correta: 1,
+                explicacao: "Senhas seguras combinam letras, números e caracteres especiais."
+            },
+            {
+                pergunta: "O que é um 'arquivo temporário'?",
+                alternativas: ["Um tipo de vírus", "Um documento permanente", "Arquivo criado por sistemas para uso rápido e depois descartado", "Um backup automático", "Um arquivo compactado"],
+                correta: 2,
+                explicacao: "Arquivo temporário é criado por sistemas para uso rápido e depois descartado."
+            },
+            {
+                pergunta: "Qual destes NÃO consome armazenamento digital?",
+                alternativas: ["Fotos no celular", "E-mails antigos", "Músicas baixadas", "Um lápis na mesa", "Documentos salvos"],
+                correta: 3,
+                explicacao: "Um lápis na mesa é um objeto físico e não consome armazenamento digital."
+            },
+            {
+                pergunta: "Qual navegador tem uma função de 'limpeza rápida' de cache?",
+                alternativas: ["Paint", "Bloco de Notas", "Calculadora", "Windows Media Player", "Google Chrome (Ctrl+Shift+Del)"],
+                correta: 4,
+                explicacao: "Google Chrome tem a função de limpeza rápida com Ctrl+Shift+Del."
+            },
+            {
+                pergunta: "O que é 'two-factor authentication' (2FA)?",
+                alternativas: ["Ter duas contas de e-mail", "Uma camada extra de segurança para logins", "Usar dois navegadores diferentes", "Excluir arquivos duas vezes", "Ter duas senhas"],
+                correta: 1,
+                explicacao: "2FA é uma camada extra de segurança para logins."
+            },
+            {
+                pergunta: "Qual destes ajuda a reduzir o impacto ambiental do lixo digital?",
+                alternativas: ["Excluir e-mails desnecessários", "Usar mais papel", "Ligar o computador 24/7", "Ignorar atualizações", "Não fazer backup"],
+                correta: 0,
+                explicacao: "Excluir e-mails desnecessários reduz o impacto ambiental do lixo digital."
+            },
+            {
+                pergunta: "O que é um 'PDF' em comparação a um 'DOCX'?",
+                alternativas: ["Um aplicativo de mensagens", "Um tipo de vírus", "Um formato mais leve e universal para documentos", "Um arquivo temporário", "Um formato de imagem"],
+                correta: 2,
+                explicacao: "PDF é um formato mais leve e universal para documentos."
+            },
+            {
+                pergunta: "Qual destes é um hábito digital sustentável?",
+                alternativas: ["Usar senhas fracas", "Deixar todos os apps abertos", "Nunca excluir nada", "Desligar dispositivos quando não estiver usando", "Não atualizar software"],
+                correta: 3,
+                explicacao: "Desligar dispositivos quando não estiver usando é um hábito digital sustentável."
+            },
+            {
+                pergunta: "O que é um 'ad blocker'?",
+                alternativas: ["Um tipo de vírus", "Um tipo de firewall", "Um aplicativo de edição de fotos", "Um serviço de nuvem", "Extensão que bloqueia anúncios online"],
+                correta: 4,
+                explicacao: "Ad blocker é uma extensão que bloqueia anúncios online."
+            },
+            {
+                pergunta: "Qual destes NÃO é um benefício da limpeza digital?",
+                alternativas: ["Mais anúncios aparecendo", "Mais espaço de armazenamento", "Melhor desempenho do dispositivo", "Menos risco de vazamento de dados", "Maior privacidade"],
+                correta: 0,
+                explicacao: "Mais anúncios aparecendo não é um benefício da limpeza digital."
+            },
+            {
+                pergunta: "O que é 'streaming' em comparação a 'download'?",
+                alternativas: ["Exclui arquivos automaticamente", "Consome dados temporariamente sem salvar no dispositivo", "É um tipo de vírus", "Aumenta o lixo digital", "Compacta arquivos"],
+                correta: 1,
+                explicacao: "Streaming consome dados temporariamente sem salvar no dispositivo."
+            },
+            {
+                pergunta: "Qual é a função do 'modo avião'?",
+                alternativas: ["Exclui arquivos antigos", "Aumenta o armazenamento", "Desativa conexões para economizar energia", "Bloqueia senhas", "Melhora a qualidade da tela"],
+                correta: 2,
+                explicacao: "Modo avião desativa conexões para economizar energia."
+            },
+            {
+                pergunta: "O que é 'cloud computing'?",
+                alternativas: ["Um vírus perigoso", "Um tipo de lixo digital", "Um aplicativo de clima", "Armazenamento e processamento de dados online", "Um tipo de hardware"],
+                correta: 3,
+                explicacao: "Cloud computing é armazenamento e processamento de dados online."
+            },
+            {
+                pergunta: "Qual destes é um sinal de que seu dispositivo está cheio de lixo digital?",
+                alternativas: ["Mais espaço de armazenamento", "Tela mais brilhante", "Bateria durando mais", "Conexão de internet mais rápida", "Lentidão e falta de espaço"],
+                correta: 4,
+                explicacao: "Lentidão e falta de espaço são sinais de dispositivo cheio de lixo digital."
+            },
+            {
+                pergunta: "Quantos % dos dados digitais globais são considerados 'lixo' (inúteis)?",
+                alternativas: ["30%", "1%", "70%", "95%", "5%"],
+                correta: 0,
+                explicacao: "Cerca de 30% dos dados digitais globais são considerados lixo."
+            },
+            {
+                pergunta: "Qual país foi pioneiro em campanhas de limpeza digital?",
+                alternativas: ["Brasil", "Estônia", "Japão", "EUA", "China"],
+                correta: 1,
+                explicacao: "A Estônia foi pioneira em campanhas de limpeza digital."
+            },
+            {
+                pergunta: "Qual organização criou o 'Digital Cleanup Day'?",
+                alternativas: ["Google", "Apple", "Let's Do It World", "Microsoft", "UNESCO"],
+                correta: 2,
+                explicacao: "A organização Let's Do It World criou o Digital Cleanup Day."
+            },
+            {
+                pergunta: "Quantas toneladas de CO₂ são emitidas anualmente por e-mails não lidos?",
+                alternativas: ["10 toneladas", "1 lg", "300 mil toneladas", "Nenhuma", "1 milhão de toneladas"],
+                correta: 3,
+                explicacao: "E-mails não lidos emitem cerca de 300 mil toneladas de CO₂ anualmente."
+            },
+            {
+                pergunta: "Qual formato de arquivo ocupa MENOS espaço?",
+                alternativas: [".DOCX", ".PNG", ".MP4", ".PDF", ".TXT"],
+                correta: 4,
+                explicacao: "Arquivos .TXT ocupam menos espaço por serem apenas texto."
+            },
+            {
+                pergunta: "Quantos e-mails não lidos equivalem a 1 kg de CO₂ por ano?",
+                alternativas: ["500 e-mails", "10 e-mails", "1 e-mail", "10.000 e-mails", "100 e-mails"],
+                correta: 0,
+                explicacao: "Cerca de 500 e-mails não lidos equivalem a 1 kg de CO₂ por ano."
+            },
+            {
+                pergunta: "Qual empresa tem um 'Clean Energy Mode' no Google Chrome?",
+                alternativas: ["Apple", "Google", "Microsoft", "Samsung", "Amazon"],
+                correta: 1,
+                explicacao: "Google tem um 'Clean Energy Mode' no Chrome."
+            },
+            {
+                pergunta: "O que é 'dark data'?",
+                alternativas: ["Dados criptografados", "Arquivos ocultos do sistema", "Dados armazenados e nunca usados", "Um tipo de vírus", "Dados excluídos"],
+                correta: 2,
+                explicacao: "Dark data são dados armazenados e nunca usados."
+            },
+            {
+                pergunta: "Qual destes consome MAIS energia em data centers?",
+                alternativas: ["Mensagens de texto", "E-mails em texto puro", "Arquivos .TXT", "Vídeos em streaming 4K", "Documentos PDF"],
+                correta: 3,
+                explicacao: "Vídeos em streaming 4K consomem mais energia em data centers."
+            },
+            {
+                pergunta: "Qual país tem a maior pegada digital per capita?",
+                alternativas: ["Índia", "Brasil", "Etiópia", "Noruega", "Estados Unidos"],
+                correta: 4,
+                explicacao: "Estados Unidos tem a maior pegada digital per capita."
+            },
+            {
+                pergunta: "Quantos GB de lixo digital uma pessoa comum acumula por ano?",
+                alternativas: ["50 GB", "0,1 GB", "1 TB", "5 GB", "10 GB"],
+                correta: 0,
+                explicacao: "Uma pessoa comum acumula cerca de 50 GB de lixo digital por ano."
+            },
+            {
+                pergunta: "Qual é a vida útil média de um servidor de data center?",
+                alternativas: ["1 ano", "3-5 anos", "10 anos", "20 anos", "6 meses"],
+                correta: 1,
+                explicacao: "A vida útil média de um servidor de data center é de 3-5 anos."
+            },
+            {
+                pergunta: "O que é 'e-waste' em comparação a 'lixo digital'?",
+                alternativas: ["Arquivos corrompidos", "E-mails antigos", "Lixo eletrônico (dispositivos físicos)", "Spam", "Cookies"],
+                correta: 2,
+                explicacao: "E-waste é lixo eletrônico (dispositivos físicos)."
+            },
+            {
+                pergunta: "Qual técnica reduz o tamanho de arquivos sem perder qualidade?",
+                alternativas: ["Usar mais cores em imagens", "Deletar tudo", "Formatando o disco", "Compactação (ex: ZIP, RAR)", "Nenhuma das anteriores"],
+                correta: 3,
+                explicacao: "Compactação reduz o tamanho de arquivos sem perder qualidade."
+            },
+            {
+                pergunta: "Qual % da energia global é usada por data centers?",
+                alternativas: ["0,1%", "5%", "10%", "50%", "2%"],
+                correta: 4,
+                explicacao: "Data centers usam cerca de 2% da energia global."
+            },
+            {
+                pergunta: "O que é 'Green IT'?",
+                alternativas: ["Um tipo de vírus", "Práticas sustentáveis na tecnologia", "Um aplicativo de jardinagem", "Um navegador ecológico", "Um sistema operacional"],
+                correta: 1,
+                explicacao: "Green IT são práticas sustentáveis na tecnologia."
+            },
+            {
+                pergunta: "Qual destes é um 'data center' sustentável?",
+                alternativas: ["Usando energia renovável", "Sem ar-condicionado", "Desligado à noite", "Usando apenas papel", "Sem backup"],
+                correta: 0,
+                explicacao: "Data center sustentável usa energia renovável."
+            },
+            {
+                pergunta: "Quantos watts um servidor médio consome por hora?",
+                alternativas: ["10W", "1.000W", "300W", "5W", "50W"],
+                correta: 2,
+                explicacao: "Um servidor médio consome cerca de 300W por hora."
+            },
+            {
+                pergunta: "Qual empresa lidera em data centers sustentáveis?",
+                alternativas: ["Netflix", "Facebook", "Tesla", "Google (carbon-neutral since 2007)", "Amazon"],
+                correta: 3,
+                explicacao: "Google lidera em data centers sustentáveis (carbon-neutral desde 2007)."
+            },
+            {
+                pergunta: "Qual é o impacto de 1 TB de dados armazenados em nuvem por ano?",
+                alternativas: ["0,2 toneladas de CO₂", "Nenhum", "10 kg de CO₂", "1 árvore plantada", "5 kg de CO₂"],
+                correta: 4,
+                explicacao: "1 TB de dados em nuvem emite 0,2 toneladas de CO₂ por ano."
+            }
+        ];
+
+        // Variáveis de controle do quiz
+        let perguntaAtual = 0;
+        let pontuacao = 0;
+        let dicasRestantes = 3;
+        let selectedQuestions = [];
+        const totalPerguntasQuiz = 10; // 10 perguntas por quiz.
+
+        // Seleciona 10 perguntas aleatórias
+        function selecionarPerguntasAleatorias() {
+            const shuffled = [...questions].sort(() => 0.5 - Math.random());
+            selectedQuestions = shuffled.slice(0, totalPerguntasQuiz);
+        }
+
+        function carregarPergunta() {
+            const progresso = (perguntaAtual / totalPerguntasQuiz) * 100;
+            document.getElementById('barra-progresso').style.width = `${progresso}%`;
+            
+            const perguntaData = selectedQuestions[perguntaAtual];
+            const areaPergunta = document.getElementById('area-pergunta');
+            
+            areaPergunta.innerHTML = `
+                <div class="pergunta">${perguntaAtual + 1}. ${perguntaData.pergunta}</div>
+                <div class="alternativas">
+                    ${perguntaData.alternativas.map((alternativa, index) => `
+                        <div class="alternativa" id="alt-${index}" onclick="verificarResposta(${index})">
+                            ${alternativa}
+                        </div>
+                    `).join('')}
+                </div>
+                <button class="dica-botao" id="dica-botao" onclick="usarDica()" ${dicasRestantes === 0 ? 'disabled' : ''}>
+                    Dica 💡
+                </button>
+                <div class="contador-dicas">Dicas disponíveis: ${dicasRestantes}/3</div>
+            `;
+        }
+
+        // Função para usar uma dica
+        function usarDica() {
+            if (dicasRestantes <= 0) return;
+            
+            const perguntaData = selectedQuestions[perguntaAtual];
+            const alternativas = perguntaData.alternativas;
+            const correta = perguntaData.correta;
+            
+            let incorretas = [];
+            while (incorretas.length < 2) {
+                const randomIndex = Math.floor(Math.random() * alternativas.length);
+                if (randomIndex !== correta && !incorretas.includes(randomIndex)) {
+                    incorretas.push(randomIndex);
+                }
+            }
+            
+            document.getElementById(`alt-${correta}`).innerHTML += 
+                `<span class="dica-marcador">→ Possível resposta</span>`;
+            
+            incorretas.forEach(incorreta => {
+                document.getElementById(`alt-${incorreta}`).innerHTML += 
+                    `<span class="dica-marcador">→ Possível resposta</span>`;
+            });
+            
+            document.getElementById('dica-botao').disabled = true;
+            dicasRestantes--;
+            document.querySelector('.contador-dicas').textContent = `Dicas disponíveis: ${dicasRestantes}/3`;
+        }
+
+        // Função para verificar a resposta do jogador
+        function verificarResposta(respostaIndex) {
+            const perguntaData = selectedQuestions[perguntaAtual];
+            const alternativas = document.querySelectorAll('.alternativa');
+            
+            alternativas.forEach(alt => {
+                alt.style.pointerEvents = 'none';
+            });
+
+            const dicaBotao = document.getElementById('dica-botao');
+            if (dicaBotao) dicaBotao.disabled = true;
+
+            if (respostaIndex === perguntaData.correta) {
+                alternativas[respostaIndex].classList.add('correta');
+                pontuacao++;
+            } else {
+                alternativas[respostaIndex].classList.add('incorreta');
+                alternativas[perguntaData.correta].classList.add('correta');
+            }
+
+            document.getElementById('area-pergunta').innerHTML += `
+                <div class="explicacao">${perguntaData.explicacao}</div>
+            `;
+
+            setTimeout(() => {
+                perguntaAtual++;
+                if (perguntaAtual < totalPerguntasQuiz) {
+                    carregarPergunta();
+                } else {
+                    mostrarResultado();
+                }
+            }, 2000);
+        }
+
+        // Função para mostrar o resultado final
+        function mostrarResultado() {
+            document.querySelector('.quiz-container').style.display = 'none';
+            const resultadoDiv = document.getElementById('resultado');
+            resultadoDiv.style.display = 'block';
+            
+            const porcentagem = Math.round((pontuacao / totalPerguntasQuiz) * 100);
+            
+            document.getElementById('pontuacao').textContent = `Sua pontuação: ${pontuacao}/${totalPerguntasQuiz}`;
+            
+            let mensagem = '';
+            if (porcentagem >= 80) {
+                mensagem = '🏆 Parabéns!!! Você é um expert em limpeza digital!!!';
+            } else if (porcentagem >= 60) {
+                mensagem = 'Muito bom!! Você está no caminho certo para uma vida digital muito mais organizada.';
+            } else if (porcentagem >= 40) {
+                mensagem = 'Bom! Mas há algumas coisas para melhorar sobre seus hábitos digitais!';
+            } else {
+                mensagem = '💡 Está na hora de começar a limpeza digital! Seu futuro digital agradece!';
+            }
+            
+            document.getElementById('mensagem-final').textContent = mensagem;
+            document.getElementById('barra-progresso').style.width = '100%';
+        }
+
+        // Função para reiniciar o quiz
+        function reiniciarQuiz() {
+            perguntaAtual = 0;
+            pontuacao = 0;
+            dicasRestantes = 3;
+            document.querySelector('.quiz-container').style.display = 'block';
+            document.getElementById('resultado').style.display = 'none';
+            selecionarPerguntasAleatorias();
+            carregarPergunta();
+        }
+
+        // Inicializa o quiz ao carregar a página
+        window.onload = function() {
+            selecionarPerguntasAleatorias();
+            carregarPergunta();
+        };
+    </script>
+</body>
+</html>

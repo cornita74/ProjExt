@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <title>Limpeza Digital - Seu Guia para uma Vida Online Mais Segura</title>
+    <style>
+        :root {
+            --primary: #3498db;  /* Azul principal */
+            --secondary: #2980b9; /* Azul mais escuro */
+            --dark: #2c3e50;     /* Azul muito escuro para fundo */
+            --darker: #1a252f;   /* Azul quase preto para containers */
+            --light: #ffffff;    /* Branco puro */
+            --light-gray: #f5f5f5; /* Branco acinzentado */
+            --gray: #95a5a6;     /* Cinza para textos secundários */
+            --container-bg: #1a3a5a; /* Nova cor azul escura para o container */
+        }
+        
+        body {
+            font-family: Roboto;
+            line-height: 1.6;
+            color: var(--light);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--dark);
+            background-image: url('../ProjExt/img/LimpezaDigital.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center; 
+        }
+        
+        .language-selector {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        
+        .language-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin: 0 5px;
+            padding: 0;
+        }
+        
+        .language-btn img {
+            width: 30px;
+            height: 20px;
+            border: 2px solid var(--light);
+            border-radius: 3px;
+        }
+        
+        .language-btn img:hover {
+            opacity: 0.8;
+        }
+        
+        .story-container {
+            background-color: var(--container-bg); /* Cor do container mais escura */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border: 1px solid var(--light);
+        }
+        
+        h1 {
+            color: var(--light);
+            text-align: center;
+        }
+        
+        p {
+            margin-bottom: 20px;
+            color: var(--light-gray);
+        }
+        
+        .quiz-intro {
+            background-color: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-left: 4px solid var(--primary);
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .quiz-intro h2 {
+            color: var(--light);
+            margin-top: 0;
+        }
+        
+        .start-quiz-btn {
+            display: block;
+            width: 200px;
+            margin: 30px auto;
+            padding: 12px;
+            background-color: var(--primary);
+            color: var(--light);
+            text-align: center;
+            border: 1px solid var(--primary);
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .start-quiz-btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        footer {
+            background: linear-gradient(135deg, rgba(26, 58, 90, 0.9) 0%, rgba(26, 37, 47, 0.9) 100%);
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            margin-top: 25px;
+            font-size: 13px;
+            border-top: 1px solid var(--primary);
+            box-shadow: 0 -3px 10px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 650px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .footer-developers {
+            flex: 1;
+            text-align: left;
+            min-width: 220px;
+        }
+        
+        .footer-developers p {
+            margin: 5px 0 8px 0;
+            color: var(--light);
+            font-weight: 500;
+            font-size: 15px;
+        }
+        
+        .footer-developers ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-developers li {
+            margin-bottom: 6px;
+            position: relative;
+            padding-left: 12px;
+            font-size: 14px;
+        }
+        
+        .footer-developers li:before {
+            content: "•";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+            font-size: 18px;
+        }
+        
+        .footer-developers a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        .footer-developers a:hover {
+        color: var(--primary);
+        transform: scale(1.1);
+        }
+        
+        .footer-logo {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .footer-logo img {
+            max-width: 200px;
+            height: auto;
+            filter: brightness(0) invert(1);
+            transition: all 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="language-selector">
+        <button class="language-btn" onclick="changeLanguage('pt-BR')" title="Português (Brasil)">
+            <img src="../ProjExt/img/BandeiraBR.png" alt="Bandeira do Brasil">
+        </button>
+        <button class="language-btn" onclick="changeLanguage('en')" title="English">
+            <img src="../ProjExt/img/BandeiraEN.png" alt="Bandeira dos EUA">
+        </button>
+        <button class="language-btn" onclick="changeLanguage('es')" title="Español">
+            <img src="../ProjExt/img/BandeiraES.png" alt="Bandeira da Espanha">
+        </button>
+    </div>
+    
+    <div class="story-container">
+        <!-- Conteúdo em Português (padrão) -->
+        <div id="content-pt-BR">
+            <h1>Sua Jornada para a Limpeza Digital</h1>
+            
+            <p>Imagine abrir seu armário e encontrar pilhas de roupas que você nunca usa, documentos amontoados sem organização e objetos quebrados ocupando espaço. Agora, pense no seu mundo digital. Será que está muito diferente?</p>
+            
+            <p>No mundo conectado de hoje, nós acumulamos arquivos, fotos, aplicativos e contas online da mesma forma que acumulamos objetos físicos. Essa bagunça digital pode parecer inofensiva à primeira vista, mas ela impacta diretamente sua produtividade, sua segurança e até mesmo sua saúde mental.</p>
+            
+            <div class="quiz-intro">
+                <h2>Você sabe o quanto de lixo digital você carrega?</h2>
+                <p>Nosso quiz de limpeza digital vai ajudar você a identificar áreas problemáticas e oferecer soluções personalizadas para organizar, proteger e otimizar sua vida online.</p>
+            </div>
+            
+            <p>A limpeza digital não é apenas sobre deletar arquivos, e sim sobre criar um ambiente online que sirva aos seus objetivos e valores. Está pronto para começar essa jornada?</p>
+            
+            <button class="start-quiz-btn" onclick="startQuiz()">Iniciar Quiz</button>
+        </div>
+        
+        <!-- Conteúdo em Inglês (oculto inicialmente) -->
+        <div id="content-en" class="hidden">
+            <h1>Your Journey to Digital Decluttering</h1>
+            
+            <p>Imagine opening your closet and finding piles of clothes you never wear, unorganized stacks of documents, and broken items taking up space. Now, think about your digital world. Is it really that different?</p>
+            
+            <p>In today's connected world, we accumulate files, photos, apps, and online accounts just like we accumulate physical clutter. This digital mess might seem harmless at first glance, but it directly impacts your productivity, your security, and even your mental health.</p>
+            
+            <div class="quiz-intro">
+                <h2>Do you know how much digital junk you're carrying?</h2>
+                <p>Our digital decluttering quiz will help you identify problem areas and offer personalized solutions to organize, protect, and optimize your online life.</p>
+            </div>
+            
+            <p>Digital decluttering is not just about deleting files! It's about creating an online environment that supports your goals and values. Are you ready to begin this journey?</p>
+            
+            <button class="start-quiz-btn" onclick="startQuiz()">Start Quiz</button>
+        </div>
+        
+        <!-- Conteúdo em Espanhol (oculto inicialmente) -->
+        <div id="content-es" class="hidden">
+            <h1>Tu Viaje hacia la Limpieza Digital</h1>
+            
+            <p>Imagina abrir tu armario y encontrar montones de ropa que nunca usas, documentos apilados sin organización y objetos rotos ocupando espacio. Ahora, piensa en tu mundo digital. ¿Realmente es tan diferente?</p>
+            
+            <p>En el mundo conectado de hoy, acumulamos archivos, fotos, aplicaciones y cuentas en línea de la misma forma que acumulamos objetos físicos. Este desorden digital puede parecer inofensivo a primera vista, pero impacta directamente en tu productividad, tu seguridad e incluso tu salud mental.</p>
+            
+            <div class="quiz-intro">
+                <h2>¿Sabes cuánta basura digital estás cargando?</h2>
+                <p>Nuestro cuestionario de limpieza digital te ayudará a identificar áreas problemáticas y ofrecerá soluciones personalizadas para organizar, proteger y optimizar tu vida en línea.</p>
+            </div>
+            
+            <p>¡La limpeza digital no se trata solo de borrar archivos! Se trata de crear un entorno digital que respalde tus objetivos y valores. ¿Estás listo para comenzar este viaje?</p>
+            
+            <button class="start-quiz-btn" onclick="startQuiz()">Comenzar Cuestionario</button>
+        </div>
+    </div>
+    <br><br><br><br><br><br>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-developers">
+                <p>
+                    <span id="developed-pt">Desenvolvido por:</span>
+                    <span id="developed-en" class="hidden">Developed by:</span>
+                    <span id="developed-es" class="hidden">Desarrollado por:</span>
+                </p><br>
+                <ul>
+                    <li><a href="https://www.linkedin.com/in/guilherme-luiz-cornita" target="_blank" onclick="return true"; > Guilherme Luiz Cornita </a></li>
+                    <li><a href="https://www.linkedin.com/in/gustavo-otaviano-36297034a" target="_blank" onclick="return true";> Gustavo Otaviano de Sousa </a></li>
+                    <li><a href="https://www.linkedin.com/in/henrique-ts" target="_blank" onclick="return true;"> Henrique Tavares da Silva </a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-logo">
+                <img src="../ProjExt/img/LogoSenai.png" alt="Logo SENAI">
+            </div>
+        </div>
+    </footer>
+    <br><br><br>
+    <script>
+        // Função para mudar o idioma
+        function changeLanguage(lang) {
+            // Oculta todos os conteúdos
+            document.querySelectorAll('[id^="content-"]').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            // Mostra o conteúdo do idioma selecionado
+            document.getElementById(`content-${lang}`).classList.remove('hidden');
+            
+            // Atualiza o atributo lang do HTML
+            document.documentElement.lang = lang;
+            
+            // Atualiza o título da página
+            updatePageTitle(lang);
+            
+            // Atualiza o texto "Desenvolvido por" no footer
+            document.getElementById('developed-pt').classList.add('hidden');
+            document.getElementById('developed-en').classList.add('hidden');
+            document.getElementById('developed-es').classList.add('hidden');
+            
+            if (lang === 'pt-BR') {
+                document.getElementById('developed-pt').classList.remove('hidden');
+            } else if (lang === 'en') {
+                document.getElementById('developed-en').classList.remove('hidden');
+            } else if (lang === 'es') {
+                document.getElementById('developed-es').classList.remove('hidden');
+            }
+            
+            // Salva a preferência do usuário no localStorage
+            localStorage.setItem('preferredLanguage', lang);
+        }
+        
+        // Função para atualizar o título da página
+        function updatePageTitle(lang) {
+            const titles = {
+                'pt-BR': 'Limpeza Digital - Seu Guia para uma Vida Online Mais Segura',
+                'en': 'Digital Decluttering - Your Guide to a Safer Online Life',
+                'es': 'Limpieza Digital - Tu Guía para una Vida en Línea Más Segura'
+            };
+            
+            document.title = titles[lang] || titles['pt-BR']; // Fallback para português
+        }
+        
+        // Função para iniciar o quiz
+        function startQuiz() {
+            const currentLang = document.documentElement.lang;
+            
+            // Links para as páginas do quiz em cada idioma
+            const quizPages = {
+                'pt-BR': 'quizBR.html',
+                'en': 'quizEN.html',
+                'es': 'quizES.html'
+            };
+            
+            // Verifica se temos um mapeamento para o idioma atual
+            if (quizPages[currentLang]) {
+                // Redireciona para a página do quiz no idioma correto
+                window.location.href = quizPages[currentLang];
+            } else {
+                // Fallback para português se o idioma não for encontrado
+                window.location.href = 'quizBR.html';
+            }
+        }
+        
+        // Inicializa a página mostrando o conteúdo no idioma preferido
+        window.onload = function() {
+            // Verifica se há um idioma preferido salvo
+            const savedLang = localStorage.getItem('preferredLanguage');
+            
+            // Detecta o idioma do navegador
+            const browserLang = navigator.language || 'pt-BR';
+            const supportedLangs = ['pt-BR', 'en', 'es'];
+            
+            let langToUse = 'pt-BR'; // Padrão
+            
+            if (savedLang && supportedLangs.includes(savedLang)) {
+                langToUse = savedLang;
+            } else if (supportedLangs.includes(browserLang)) {
+                langToUse = browserLang;
+            } else if (browserLang.startsWith('pt')) {
+                langToUse = 'pt-BR';
+            } else if (browserLang.startsWith('es')) {
+                langToUse = 'es';
+            } else if (browserLang.startsWith('en')) {
+                langToUse = 'en';
+            }
+            
+            // Aplica o idioma
+            changeLanguage(langToUse);
+        };
+    </script>
+</body>
+</html>
